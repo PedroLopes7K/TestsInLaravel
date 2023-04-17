@@ -14,7 +14,7 @@ class BooksControllerTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_books_get_endpoint(): void
+    public function test_get_books_endpoint(): void
     {
         $books = Book::factory(3)->create();
 
@@ -40,5 +40,53 @@ class BooksControllerTest extends TestCase
             ]);
 
         });
+    }
+
+    public function test_get_single_book_endpoint(): void
+    {
+        $book = Book::factory(1)->createOne();
+
+        $response = $this->getJson('/api/books/' . $book->id);
+
+        $response->assertStatus(200);
+
+        $response->assertJson(function (AssertableJson $json) use ($book) {
+            info($json);
+            $json->hasAll(['id', 'title', 'isbn'])->etc();
+            // $json->hasAll(['id', 'title', 'isbn','created_at','updated_at']);
+
+            $json->whereType('id', 'integer');
+            $json->whereType('title', 'string');
+            $json->whereType('isbn', 'string');
+
+
+            $json->whereAll([
+                'id'     => $book->id,
+                'title'  => $book->title,
+                'isbn'   => $book->isbn,
+            ]);
+
+        });
+    }
+
+    public function test_post_books_endpoint(): void
+    {
+        $book = Book::factory(1)->makeOne()->toArray();
+
+        $response = $this->postJson('/api/books',$book);
+
+        $response->assertStatus(201);
+
+        $response->assertJson(function (AssertableJson $json) use ($book) {
+            
+            $json->hasAll(['id', 'title', 'isbn','created_at','updated_at']);
+     
+            $json->whereAll([
+                'title'  => $book['title'],
+                'isbn'   => $book['isbn'],
+            ]);
+
+        });
+
     }
 }

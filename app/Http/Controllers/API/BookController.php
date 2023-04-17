@@ -21,15 +21,19 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+       $book = Book::create($request->all());
+
+       return response()->json($book, 201);
+
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Book $book)
     {
-        //
+        return response()->json($book);
+        
     }
 
     /**
