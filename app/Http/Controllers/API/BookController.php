@@ -41,7 +41,12 @@ class BookController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+       $book = Book::find($id);
+
+       $book->update($request->all());
+
+       return response()->json($book, 200);
+
     }
 
     /**

@@ -89,4 +89,59 @@ class BooksControllerTest extends TestCase
         });
 
     }
+
+    
+    public function test_put_books_endpoint(): void
+    {
+
+        Book::factory(1)->createOne();
+
+        $book = [
+            'title' => 'Atualizando Livro',
+            'isbn'  => '2355wjudldofuft'
+        ];
+
+
+        $response = $this->putJson('/api/books/1',$book);
+
+        $response->assertStatus(200);
+
+        $response->assertJson(function (AssertableJson $json) use ($book) {
+            
+            $json->hasAll(['id', 'title', 'isbn','created_at','updated_at']);
+     
+            $json->whereAll([
+                'title'  => $book['title'],
+                'isbn'   => $book['isbn'],
+            ]);
+
+        });
+
+
+    }
+
+    public function test_patch_books_endpoint(): void
+    {
+
+        Book::factory(1)->createOne();
+
+        $book = [
+            'title' => 'Atualizando Livro Patch',
+        ];
+
+
+        $response = $this->putJson('/api/books/1',$book);
+
+        $response->assertStatus(200);
+
+        $response->assertJson(function (AssertableJson $json) use ($book) {
+            
+            $json->hasAll(['id', 'title', 'isbn','created_at','updated_at']);
+     
+            $json->where('title', $book['title'])->etc();
+
+        });
+
+
+    }
 }
