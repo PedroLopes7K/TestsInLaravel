@@ -54,6 +54,10 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        
+   Book::find($id)->delete();
+
+       return response()->json([], 204);
+
     }
 }

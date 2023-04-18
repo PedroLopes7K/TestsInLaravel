@@ -144,4 +144,18 @@ class BooksControllerTest extends TestCase
 
 
     }
+
+
+    public function test_delete_books_endpoint(): void
+    {
+
+        Book::factory(1)->createOne();
+
+        $response = $this->deleteJson('/api/books/1');
+
+       
+        $response->assertStatus(204);
+
+
+    }
 }
