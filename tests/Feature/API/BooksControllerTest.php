@@ -90,6 +90,21 @@ class BooksControllerTest extends TestCase
 
     }
 
+    public function test_post_books_should_validate_when_try_create_a_invalid_book()
+    {
+        $response = $this->postJson('/api/books', []);
+
+        $response->assertStatus(422);
+
+        $response->assertJson(function (AssertableJson $json){
+
+            $json->hasAll(['message', 'errors']);
+
+            $json->where('errors.title.0', 'this field is required!')
+                ->where('errors.isbn.0', 'this field is required!');
+        });
+    }
+
     
     public function test_put_books_endpoint(): void
     {
